@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DreamsInCode</title>
+  <link rel="icon" type="image/jpg" href="img/favicon.ico">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .code-container {
+      background: #272822;
+      color: #f8f8f2;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      position: relative;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      border: none;
+      background: #007BFF;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Matrix Rain - The Matrix </h1>
+  
+  <div class="code-container" id="codeBlock">
+    &lt;!DOCTYPE html&gt;
+    &lt;html lang="en"&gt;
+    &lt;head&gt;
+      &lt;meta charset="UTF-8"&gt;
+      &lt;title&gt;Katakana Matrix Rain Depth&lt;/title&gt;
+      &lt;style&gt;
+        html, body {
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          height: 100%;
+          background: black;
+          overflow: hidden;
+        }
+        canvas {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      &lt;canvas id="matrix"&gt;&lt;/canvas&gt;
+
+      &lt;script&gt;
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+
+        const katakana = "ｶ6ｾ5ﾌｧ6ｽ7ﾃｳ0ﾋｶ3ﾋ9ｵ0ﾝｽ6ｼ9ｮﾙ0ｶﾑ";
+        const chars = katakana.split("");
+
+        const layers = [
+          { fontSize: 32, speed: 2, opacity: 1.0 },
+          { fontSize: 28, speed: 1.0, opacity: 0.9 },
+          { fontSize: 24, speed: 2.5, opacity: 0.8 },
+          { fontSize: 22, speed: 2.0, opacity: 0.7 },
+          { fontSize: 20, speed: 1.6, opacity: 0.6 },
+          { fontSize: 18, speed: 1.3, opacity: 0.5 },
+          { fontSize: 16, speed: 1.0, opacity: 0.4 },
+          { fontSize: 14, speed: 0.8, opacity: 0.35 },
+          { fontSize: 12, speed: 0.6, opacity: 0.3 },
+          { fontSize: 10, speed: 0.4, opacity: 0.25 }
+        ];
+
+        layers.forEach(layer =&gt; {
+          layer.columns = Math.floor(canvas.width / layer.fontSize);
+          layer.drops = Array(layer.columns).fill(0);
+        });
+
+        function draw() {
+          ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          layers.forEach((layer, index) =&gt; {
+            ctx.fillStyle = `rgba(0, 255, 0, ${layer.opacity})`;
+            ctx.font = layer.fontSize + "px monospace";
+
+            if (index === 0) {
+              ctx.shadowBlur = 8;
+              ctx.shadowColor = "lime";
+            } else {
+              ctx.shadowBlur = 0;
+            }
+
+            for (let i = 0; i &lt; layer.drops.length; i++) {
+              const text = chars[Math.floor(Math.random() * chars.length)];
+              const verticalSpacing = (index === 0) ? layer.fontSize * 0.8 : layer.fontSize;
+
+              ctx.fillText(text, i * layer.fontSize, layer.drops[i] * verticalSpacing);
+
+              if (layer.drops[i] * verticalSpacing &gt; canvas.height && Math.random() &gt; 0.975) {
+                layer.drops[i] = 0;
+              }
+              layer.drops[i] += layer.speed;
+            }
+          });
+        }
+
+        setInterval(draw, 50);
+
+        window.addEventListener('resize', () =&gt; {
+          resizeCanvas();
+          layers.forEach(layer =&gt; {
+            layer.columns = Math.floor(canvas.width / layer.fontSize);
+            layer.drops = Array(layer.columns).fill(0);
+          });
+        });
+      &lt;/script&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+  </div>
+  
+  <button onclick="copyCode()">Copy Code</button>
+
+  <script>
+    function copyCode() {
+      const codeBlock = document.getElementById("codeBlock").innerText;
+      navigator.clipboard.writeText(codeBlock).then(() => {
+        alert("Code copied to clipboard!");
+      });
+    }
+  </script>
+</body>
+</html>
